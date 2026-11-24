@@ -1,5 +1,7 @@
 # duet
 
+[English](README.md)
+
 `duet` 是一个自包含的 Codex skill，用于在不同模型之间分工完成项目任务。默认组合是 **GPT-6 Astra 负责协调，GPT-6.1 Sol 负责执行**。协调者负责理解目标、拆解任务、处理关键判断、整合改动和最终验收；Sol 子 agent 负责边界明确的调查与实现。
 
 它适用于不同项目，会遵循当前仓库自己的指令、工具、文件责任和验收要求，不假设特定语言、框架或目录结构。
@@ -35,13 +37,27 @@ Astra 检查证据、整合并验证最终结果
 
 ## 安装
 
-将本目录复制到 Codex skill 目录：
+在 macOS 或 Linux 终端运行（需要 Git 和 curl）：
 
-```text
-~/.codex/skills/duet/
+```bash
+curl -fsSL https://raw.githubusercontent.com/YuhangJia123/duet/main/install.sh | bash
 ```
 
-目录结构：
+脚本下载并安装到 `${CODEX_HOME:-$HOME/.codex}/skills/duet`。
+再次运行即可更新技能，同时保留你已有的 `models.json` 和额外文件。
+安装不修改登录凭据或全局模型设置。
+
+如果希望先查看脚本再安装：
+
+```bash
+git clone https://github.com/YuhangJia123/duet.git
+cd duet
+cat install.sh
+bash install.sh
+```
+
+自定义安装位置时，运行 `bash install.sh /path/to/skills/duet`。
+安装后的目录结构：
 
 ```text
 duet/
@@ -57,11 +73,24 @@ duet/
 
 ## 使用
 
-如果希望 Astra 协调，先在根会话选择 GPT-6 Astra，然后调用：
+如果希望 Astra 协调，先在根会话选择 GPT-6 Astra。在会把斜杠消息发送给 agent 的客户端中输入：
 
 ```text
-$duet 实现这个功能。根据实际情况把边界明确的工作交给 GPT-6.1 Sol，并验证整合后的结果。
+/duet 实现这个功能。
 ```
+
+也可以只发送 `/duet`，技能会接着处理当前尚未完成的任务；没有任务时才询问要做什么。
+
+**Codex CLI 兼容说明：**原生斜杠命令解析器可能在消息到达 agent 前拒绝未注册的命令。
+安装 skill 不会在该菜单注册 `/duet`。CLI 中请使用原生技能调用：
+
+```text
+$duet 实现这个功能。
+```
+
+消息送达 agent 后，`/duet` 和 `$duet` 使用同一套分工规则。
+依据见 [Codex CLI 斜杠命令说明](https://developers.openai.com/codex/cli/slash-commands)
+及[提交解析源码](https://github.com/openai/codex/blob/main/codex-rs/tui/src/bottom_pane/chat_composer/slash_input.rs)。
 
 Skill 不能改变已经运行的根会话模型。它会检查宿主是否提供配置的 worker 模型，以及是否支持对子 agent 单独选模型；不支持时会说明，不会悄悄换成其他型号。
 

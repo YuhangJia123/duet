@@ -1,5 +1,7 @@
 # duet
 
+[简体中文](README.zh-CN.md)
+
 `duet` is a self-contained Codex skill for coordinating project work across models. Its default pairing is GPT-6 Astra as coordinator and GPT-6.1 Sol as the execution model. The coordinator owns planning, difficult decisions, integration, and final verification. Sol agents handle bounded investigation and implementation.
 
 The skill is repository-agnostic. It follows the active project's own instructions, tools, ownership boundaries, and acceptance checks. It does not assume a language, framework, or repository layout.
@@ -31,13 +33,27 @@ These practices adapt useful ideas from Cavecrew/Caveman and other public Codex 
 
 ## Install
 
-Copy this skill folder to a Codex skill directory:
+On macOS or Linux, run this in a terminal (requires Git and curl):
 
-```text
-~/.codex/skills/duet/
+```bash
+curl -fsSL https://raw.githubusercontent.com/YuhangJia123/duet/main/install.sh | bash
 ```
 
-Expected contents:
+The script downloads the skill into `${CODEX_HOME:-$HOME/.codex}/skills/duet`.
+Running it again updates the skill while keeping your existing `models.json` and
+any extra files. It does not change authentication or global model settings.
+
+To inspect the source before installing:
+
+```bash
+git clone https://github.com/YuhangJia123/duet.git
+cd duet
+cat install.sh
+bash install.sh
+```
+
+For a custom destination, use `bash install.sh /path/to/skills/duet`.
+The installed directory contains:
 
 ```text
 duet/
@@ -53,11 +69,27 @@ Refresh or restart Codex if it does not appear in the skill picker.
 
 ## Use
 
-Choose GPT-6 Astra for the root session if it should coordinate, then invoke:
+Choose GPT-6 Astra for the root session if it should coordinate. In clients that
+forward slash-prefixed messages to the agent, use:
 
 ```text
-$duet Implement this feature. Delegate bounded work to GPT-6.1 Sol agents where useful, then verify the integrated result.
+/duet Implement this feature.
 ```
+
+You can also send `/duet` alone to apply the workflow to the latest unresolved task.
+If no task is available, it asks for one.
+
+**Codex CLI compatibility:** its native slash parser can reject unknown commands
+before the skill sees them. Installing a skill does not register `/duet` in that
+menu. In CLI, use the native skill invocation instead:
+
+```text
+$duet Implement this feature.
+```
+
+The slash-message trigger and `$duet` use the same workflow once delivered to the agent.
+See [Codex CLI slash commands](https://developers.openai.com/codex/cli/slash-commands)
+and [the submission parser](https://github.com/openai/codex/blob/main/codex-rs/tui/src/bottom_pane/chat_composer/slash_input.rs).
 
 The skill cannot change the model of an already-running root session. It checks whether the host exposes the configured worker model and can select a per-agent model. It reports incompatibility rather than silently substituting a model.
 

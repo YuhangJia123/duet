@@ -1,4 +1,4 @@
 interface:
   display_name: "duet"
-  short_description: "Coordinate work across models with compact context and verification"
+  short_description: "Coordinate models with compact context and verified results"
   default_prompt: "Use $duet to delegate bounded work, minimize context transfer, and verify the integrated result."

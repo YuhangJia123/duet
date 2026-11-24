@@ -1,6 +1,6 @@
 ---
 name: duet
-description: Coordinate Codex project work with a strong planning model and lower-cost execution agents while controlling context and verifying results. Use for duet requests or substantial tasks that benefit from model-split delegation; keep small tasks inline.
+description: Coordinate Codex project work with a strong planning model and lower-cost execution agents while controlling context and verifying results. Use for /duet, $duet, duet requests, or substantial tasks that benefit from model-split delegation; keep small tasks inline.
 ---
 
 # duet
@@ -13,6 +13,20 @@ This skill is self-contained: all execution rules are included here. Do not load
 require cavecrew or any upstream skill/runner. Source links are attribution and
 optional background, not execution dependencies. Native host subagent tools and
 available models remain runtime prerequisites.
+
+## Invocation
+
+Treat `/duet` (when delivered as user message text) and `$duet` as requests to apply
+this skill to the current task. With a task after the invocation, start that work.
+With a bare invocation, continue the latest unresolved task when it is clear; do not
+require the user to repeat it. If there is no actionable task, briefly acknowledge
+readiness and ask for the task. Apply the workflow to this task, not unrelated future
+requests. Invocation does not authorize a model switch or new external actions.
+
+This is a message trigger, not registration of a native slash command. Hosts that
+intercept unknown slash commands may reject `/duet` before it reaches the agent.
+Use the host's skill picker or `$duet` in those hosts; do not claim an alias was
+installed merely by changing this file.
 
 ## Select the route
 
