@@ -1,0 +1,4 @@
+{
+  "coordinator_model": "gpt-6-astra",
+  "worker_model": "gpt-6.1-sol"
+}
